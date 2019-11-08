@@ -12,7 +12,8 @@
   "author": "ml <mdigitalcomm@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "three": "^0.110.0"
+    "three": "^0.110.0",
+    "three-orbitcontrols": "^2.110.1"
   },
   "devDependencies": {
     "webpack": "^4.41.2",
