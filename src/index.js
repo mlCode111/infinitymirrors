@@ -2,45 +2,58 @@ import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 
-var scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1e1e1e);
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 2000 );
+let scene, camera, renderer, controls, cube;
 
-var renderer = new THREE.WebGLRenderer();
-var controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1e1e1e);
+  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 2000 );
 
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );  
+  renderer = new THREE.WebGLRenderer();
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0, 0);
 
-var geometry = new THREE.BoxGeometry(0.3,0.3,0.3);
-var material = new THREE.MeshStandardMaterial({color: 0xadd8e6});
-var cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-camera.position.set(-5.0, 0.0, 10);
-controls.update();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setPixelRatio(window.devicePixelRatio);
+  document.body.appendChild( renderer.domElement );  
 
-// Light bulb
-var bulbGeometry = new THREE.SphereBufferGeometry(0.15,16,32);
-var bulbMaterial = new THREE.MeshStandardMaterial({
-  emissive: 0x9B870C,
-  emissiveIntensity: 10,
-  color: 0x9B870C
-});
-var bulbLight = new THREE.PointLight(0x9B870C, 1, 100, 2);
-bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMaterial));
-bulbLight.position.set(0, 1.5, 0);
-bulbLight.castShadow = true;
-scene.add(bulbLight);
+  let geometry = new THREE.BoxGeometry(0.3,0.3,0.3);
+  let material = new THREE.MeshStandardMaterial({color: 0xadd8e6});
+  cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+  camera.position.set(-5.0, 0.0, 10);
+  controls.update();
 
-// HemiLight
-var hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 0.8);
-scene.add(hemiLight);
+  // Light bulb
+  let bulbGeometry = new THREE.SphereBufferGeometry(0.15,16,32);
+  let bulbMaterial = new THREE.MeshStandardMaterial({
+    emissive: 0x9B870C,
+    emissiveIntensity: 10,
+    color: 0x9B870C
+  });
+  let bulbLight = new THREE.PointLight(0x9B870C, 1, 100, 2);
+  bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMaterial));
+  bulbLight.position.set(0, 1.5, 0);
+  bulbLight.castShadow = true;
+  scene.add(bulbLight);
+
+  // HemiLight
+  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 0.8);
+  scene.add(hemiLight);
+
+  mirror(20, "back");
+  mirror(20, "front");
+  mirror(20, "bottom");
+  mirror(20, "top");
+  mirror(20, "left");
+  mirror(20, "right");
+}
+
 
 // Mirrors
 function mirror(width, side) {
-  var geometry = new THREE.PlaneBufferGeometry(width, width);
-  var mirror = new Reflector(geometry, {
+  let geometry = new THREE.PlaneBufferGeometry(width, width);
+  let mirror = new Reflector(geometry, {
     clipBias: 0.003,
     textureWidth: window.innerWidth * window.devicePixelRatio,
     textureHeight: window.innerHeight * window.devicePixelRatio,
@@ -68,12 +81,7 @@ function mirror(width, side) {
   scene.add(mirror);
 }
 
-mirror(20, "back");
-mirror(20, "front");
-mirror(20, "bottom");
-mirror(20, "top");
-mirror(20, "left");
-mirror(20, "right");
+
 
 function animate() {
   requestAnimationFrame(animate);
@@ -83,4 +91,14 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+init();
 animate();
+
+function onWindowResize() {
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  init();
+  animate();
+}
+window.addEventListener('resize', onWindowResize);
