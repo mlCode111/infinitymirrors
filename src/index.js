@@ -8,8 +8,8 @@ let planets =[];
 
 function init() {
   scene = new THREE.Scene();
-  // scene.background = new THREE.Color(0x1e1e1e);
-  scene.background = new THREE.Color("grey");
+  scene.background = new THREE.Color(0x1e1e1e);
+  // scene.background = new THREE.Color("grey");
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 2000 );
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -22,14 +22,14 @@ function init() {
   camera.position.set(-5.0, 0.0, 10);
   controls.update();
 
-  // Create stars and planets
-  createStars(100);
-  createPlanets(100);
-
   // HemiLight
-  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 0.8);
+  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 5);
   scene.add(hemiLight);
 
+  // Create stars and planets
+  createStars(25);
+  createPlanets(100);
+  //Create mirrors 
   mirror(20, "back");
   mirror(20, "front");
   mirror(20, "bottom");
@@ -41,17 +41,16 @@ function init() {
 // Create one star
  function createStars(n) {
   for (let i=0; i<n; i++) {
-    let bulbGeometry = new THREE.IcosahedronBufferGeometry(0.1);
+    let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*0.3);
     let colors = [0xadd8e6, 0x32a852, 0xa86932, 0xa84c32, 0x3250a8, 0x4432a8, 0x9432a8]
     let theColor = colors[Math.floor(Math.random()*colors.length)];
     let bulbMaterial = new THREE.MeshStandardMaterial({
       emissive: theColor,
-      emissiveIntensity: 0.01,
+      emissiveIntensity: 0.7,
       color: theColor
     });
-    let bulbLight = new THREE.PointLight(theColor, 1, 100, 2);
+    let bulbLight = new THREE.PointLight(theColor, 0.4, 5, 2);
     bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMaterial));
-    bulbLight.position.set(0, 1.5, 0);
     bulbLight.castShadow = true;
     scene.add(bulbLight);
     stars.push(bulbLight);
@@ -65,7 +64,7 @@ function init() {
 //  Create one planet
 function createPlanets(n) {
   for (let i=0; i<n; i++) {
-    let geometry = new THREE.OctahedronBufferGeometry(0.1);
+    let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 0.2);
     let colors = [0xadd8e6, 0x32a852, 0xa86932, 0xa84c32, 0x3250a8, 0x4432a8, 0x9432a8]
     let theColor = colors[Math.floor(Math.random()*colors.length)];
     let material = new THREE.MeshStandardMaterial({color: theColor});
@@ -112,12 +111,12 @@ function mirror(width, side) {
 
 function update() {
   stars.map(star => {
-    star.rotation.x += Math.random() * 0.5;
-    star.rotation.y += Math.random() * 0.5;
+    star.rotation.x += Math.random() * 0.1;
+    star.rotation.y += Math.random() * 0.1;
   });
   planets.map(planet=> {
-    planet.rotation.x += Math.random() * 0.6;
-    planet.rotation.z += Math.random() * 0.6;
+    planet.rotation.x += Math.random() * 0.1;
+    planet.rotation.y += Math.random() * 0.2;
   })  
 }
 
