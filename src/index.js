@@ -5,10 +5,11 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 let scene, camera, renderer, controls;
 let stars =[];
 let planets =[];
+let colors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d]
 
 function init() {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x1e1e1e);
+  scene.background = new THREE.Color(0x59615b);
   // scene.background = new THREE.Color("grey");
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 2000 );
 
@@ -19,7 +20,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild( renderer.domElement );  
 
-  camera.position.set(-5.0, 0.0, 10);
+  camera.position.set(0.0, 0.0, 15);
   controls.update();
 
   // HemiLight
@@ -27,8 +28,8 @@ function init() {
   scene.add(hemiLight);
 
   // Create stars and planets
-  createStars(25);
-  createPlanets(100);
+  createStars(50);
+  createPlanets(300);
   //Create mirrors 
   mirror(20, "back");
   mirror(20, "front");
@@ -42,7 +43,6 @@ function init() {
  function createStars(n) {
   for (let i=0; i<n; i++) {
     let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*0.3);
-    let colors = [0xadd8e6, 0x32a852, 0xa86932, 0xa84c32, 0x3250a8, 0x4432a8, 0x9432a8]
     let theColor = colors[Math.floor(Math.random()*colors.length)];
     let bulbMaterial = new THREE.MeshStandardMaterial({
       emissive: theColor,
@@ -65,7 +65,6 @@ function init() {
 function createPlanets(n) {
   for (let i=0; i<n; i++) {
     let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 0.2);
-    let colors = [0xadd8e6, 0x32a852, 0xa86932, 0xa84c32, 0x3250a8, 0x4432a8, 0x9432a8]
     let theColor = colors[Math.floor(Math.random()*colors.length)];
     let material = new THREE.MeshStandardMaterial({color: theColor});
     let octahedron = new THREE.Mesh(geometry, material);
@@ -85,7 +84,7 @@ function mirror(width, side) {
     clipBias: 0.003,
     textureWidth: window.innerWidth * window.devicePixelRatio,
     textureHeight: window.innerHeight * window.devicePixelRatio,
-    color: 0x777777,
+    color: 0x5d5d5d,
     recursion: 1
   })
   if (side === "back") {
