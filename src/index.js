@@ -10,7 +10,6 @@ let colors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d]
 function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x59615b);
-  // scene.background = new THREE.Color("grey");
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 2000 );
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -20,29 +19,29 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild( renderer.domElement );  
 
-  camera.position.set(0.0, 0.0, 15);
+  camera.position.set(0.0, 0.0, 150);
   controls.update();
 
   // HemiLight
-  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 5);
+  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 4);
   scene.add(hemiLight);
-
+  
   // Create stars and planets
   createStars(50);
   createPlanets(300);
   //Create mirrors 
-  mirror(20, "back");
-  mirror(20, "front");
-  mirror(20, "bottom");
-  mirror(20, "top");
-  mirror(20, "left");
-  mirror(20, "right");
+  mirror(200, "back");
+  mirror(200, "front");
+  mirror(200, "bottom");
+  mirror(200, "top");
+  mirror(200, "left");
+  mirror(200, "right");
 }
 
 // Create one star
  function createStars(n) {
   for (let i=0; i<n; i++) {
-    let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*0.3);
+    let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*3);
     let theColor = colors[Math.floor(Math.random()*colors.length)];
     let bulbMaterial = new THREE.MeshStandardMaterial({
       emissive: theColor,
@@ -54,9 +53,9 @@ function init() {
     bulbLight.castShadow = true;
     scene.add(bulbLight);
     stars.push(bulbLight);
-    let x = Math.random()*20 - 10;
-    let y = Math.random()*20 - 10;
-    let z = Math.random()*20 - 10;
+    let x = Math.random()*200 - 100;
+    let y = Math.random()*200 - 100;
+    let z = Math.random()*200 - 100;
     bulbLight.position.set(x, y, z);
   }
  } 
@@ -64,15 +63,15 @@ function init() {
 //  Create one planet
 function createPlanets(n) {
   for (let i=0; i<n; i++) {
-    let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 0.2);
+    let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 1);
     let theColor = colors[Math.floor(Math.random()*colors.length)];
     let material = new THREE.MeshStandardMaterial({color: theColor});
     let octahedron = new THREE.Mesh(geometry, material);
     scene.add(octahedron);
     planets.push(octahedron);
-    let x = Math.random()*20 - 10;
-    let y = Math.random()*20 - 10;
-    let z = Math.random()*20 - 10;
+    let x = Math.random()*200 - 100;
+    let y = Math.random()*200 - 100;
+    let z = Math.random()*200 - 100;
     octahedron.position.set(x, y, z);
   }
 }
@@ -135,10 +134,8 @@ init();
 animate();
 
 function onWindowResize() {
-  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  init();
-  animate();
 }
 window.addEventListener('resize', onWindowResize);
