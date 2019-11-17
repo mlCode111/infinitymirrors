@@ -23,11 +23,11 @@ function init() {
   controls.update();
 
   // HemiLight
-  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 4);
-  scene.add(hemiLight);
+  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 2);
+  // scene.add(hemiLight);
   
   // Create stars and planets
-  createStars(50);
+  createStars(80);
   createPlanets(300);
   //Create mirrors 
   mirror(200, "back");
@@ -41,14 +41,14 @@ function init() {
 // Create one star
  function createStars(n) {
   for (let i=0; i<n; i++) {
-    let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*3);
-    let theColor = colors[Math.floor(Math.random()*colors.length)];
+    let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*0.3);
+    // let bulbGeometry = new THREE.IcosahedronBufferGeometry(0.3);
+    let starColors = [0x441491, 0x122225, 0x3c3939]
+    let theColor = starColors[Math.floor(Math.random()*colors.length)];
     let bulbMaterial = new THREE.MeshStandardMaterial({
-      emissive: theColor,
-      emissiveIntensity: 0.7,
       color: theColor
     });
-    let bulbLight = new THREE.PointLight(theColor, 0.4, 5, 2);
+    let bulbLight = new THREE.PointLight(theColor, 1, 150, 2);
     bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMaterial));
     bulbLight.castShadow = true;
     scene.add(bulbLight);
@@ -63,9 +63,10 @@ function init() {
 //  Create one planet
 function createPlanets(n) {
   for (let i=0; i<n; i++) {
-    let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 1);
+    let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 2);
+    // let geometry = new THREE.OctahedronBufferGeometry(2);
     let theColor = colors[Math.floor(Math.random()*colors.length)];
-    let material = new THREE.MeshStandardMaterial({color: theColor});
+    let material = new THREE.MeshPhongMaterial({color: theColor});
     let octahedron = new THREE.Mesh(geometry, material);
     scene.add(octahedron);
     planets.push(octahedron);
@@ -109,12 +110,13 @@ function mirror(width, side) {
 
 function update() {
   stars.map(star => {
-    star.rotation.x += Math.random() * 0.1;
-    star.rotation.y += Math.random() * 0.1;
+    star.rotation.x += Math.random() * 0.3;
+    star.rotation.y += Math.random() * 0.5;
   });
   planets.map(planet=> {
-    planet.rotation.x += Math.random() * 0.1;
-    planet.rotation.y += Math.random() * 0.2;
+    planet.rotation.x += Math.random() * 0.4;
+    planet.rotation.y += Math.random() * 0.5;
+    planet.rotation.z += Math.random() * 0.3;
   })  
 }
 
