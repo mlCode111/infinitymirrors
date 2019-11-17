@@ -10,7 +10,7 @@ let colors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d]
 function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x59615b);
-  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 2500 );
+  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   controls = new OrbitControls(camera, renderer.domElement);
@@ -19,7 +19,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild( renderer.domElement );  
 
-  camera.position.set(0.0, 0.0, 1150);
+  camera.position.set(0.0, 0.0, 180);
   controls.update();
 
   // HemiLight
@@ -27,35 +27,41 @@ function init() {
   // scene.add(hemiLight);
   
   // Create stars and planets
-  createStars(50);
+  createStars(30);
   createPlanets(300);
   //Create mirrors 
-  mirror(1000, "back");
-  mirror(1000, "front");
-  mirror(1000, "bottom");
-  mirror(1000, "top");
-  mirror(1000, "left");
-  mirror(1000, "right");
+  mirror(200, "back");
+  mirror(200, "front");
+  mirror(200, "bottom");
+  mirror(200, "top");
+  mirror(200, "left");
+  mirror(200, "right");
+
+  wall(200, "back");
+  wall(200, "front");
+  wall(200, "bottom");
+  wall(200, "top");
+  wall(200, "left");
+  wall(200, "right");
 }
 
 // Create one star
  function createStars(n) {
   for (let i=0; i<n; i++) {
-    let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*1.5);
-    // let bulbGeometry = new THREE.IcosahedronBufferGeometry(0.3);
-    let starColors = [0x441491, 0x122225, 0x3c3939]
+    let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*0.5);
+    let starColors = [0x5e2eab, 0x14353b, 0x573d3d]
     let theColor = starColors[Math.floor(Math.random()*colors.length)];
     let bulbMaterial = new THREE.MeshStandardMaterial({
       color: theColor
     });
-    let bulbLight = new THREE.PointLight(theColor, 1, 1500, 2);
+    let bulbLight = new THREE.PointLight(theColor, 1, 200, 2);
     bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMaterial));
     bulbLight.castShadow = true;
     scene.add(bulbLight);
     stars.push(bulbLight);
-    let x = Math.random()*1000 - 500;
-    let y = Math.random()*1000 - 500;
-    let z = Math.random()*1000 - 500;
+    let x = Math.random()*200 - 100;
+    let y = Math.random()*200 - 100;
+    let z = Math.random()*200 - 100;
     bulbLight.position.set(x, y, z);
   }
  } 
@@ -63,16 +69,16 @@ function init() {
 //  Create one planet
 function createPlanets(n) {
   for (let i=0; i<n; i++) {
-    let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 10);
-    // let geometry = new THREE.OctahedronBufferGeometry(2);
+    let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 2);
+    // let geometry = new THREE.SphereBufferGeometry(Math.random()* 2, Math.floor(Math.random()* 2) + 3, Math.floor(Math.random()* 3) + 2, 0, 6.3, 0, 3.1);
     let theColor = colors[Math.floor(Math.random()*colors.length)];
-    let material = new THREE.MeshPhongMaterial({color: theColor});
+    let material = new THREE.MeshStandardMaterial({color: theColor});
     let octahedron = new THREE.Mesh(geometry, material);
     scene.add(octahedron);
     planets.push(octahedron);
-    let x = Math.random()*1000 - 500;
-    let y = Math.random()*1000 - 500;
-    let z = Math.random()*1000 - 500;
+    let x = Math.random()*200 - 100;
+    let y = Math.random()*200 - 100;
+    let z = Math.random()*200 - 100;
     octahedron.position.set(x, y, z);
   }
 }
@@ -88,24 +94,48 @@ function mirror(width, side) {
     recursion: 1
   })
   if (side === "back") {
-    mirror.position.set(0, 0, -width/2);
+    mirror.position.set(0, 0, -width/2 + 0.1);
   } else if (side === "front") {
-    mirror.position.set(0,0, width/2);
+    mirror.position.set(0,0, width/2 - 0.1);
     mirror.rotateX(Math.PI);
   } else if (side === "top") {
-    mirror.position.set(0, width/2, 0);
+    mirror.position.set(0, width/2 - 0.1 , 0);
     mirror.rotateX(Math.PI/2);
   } else if (side === "bottom") {
-    mirror.position.set(0, -width/2, 0);
+    mirror.position.set(0, -width/2 + 0.1, 0);
     mirror.rotateX(-Math.PI/2);
   } else if (side === "left") {
-    mirror.position.set(-width/2, 0, 0);
+    mirror.position.set(-width/2 + 0.1, 0, 0);
     mirror.rotateY(Math.PI/2);
   } else if (side === "right") {
-    mirror.position.set(width/2, 0, 0);
+    mirror.position.set(width/2 - 0.1, 0, 0);
     mirror.rotateY(-Math.PI/2);
   }
   scene.add(mirror);
+}
+
+function wall(width, side) {
+  let geometry = new THREE.PlaneGeometry(width, width);
+  let wall = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x292b29}));
+  if (side === "back") {
+    wall.position.set(0, 0, -width/2);
+  } else if (side === "front") {
+    wall.position.set(0,0, width/2);
+    wall.rotateX(Math.PI);
+  } else if (side === "top") {
+    wall.position.set(0, width/2, 0);
+    wall.rotateX(Math.PI/2);
+  } else if (side === "bottom") {
+    wall.position.set(0, -width/2, 0);
+    wall.rotateX(-Math.PI/2);
+  } else if (side === "left") {
+    wall.position.set(-width/2, 0, 0);
+    wall.rotateY(Math.PI/2);
+  } else if (side === "right") {
+    wall.position.set(width/2, 0, 0);
+    wall.rotateY(-Math.PI/2);
+  }
+  scene.add(wall);
 }
 
 function update() {
