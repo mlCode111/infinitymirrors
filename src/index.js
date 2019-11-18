@@ -6,10 +6,10 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 let scene, camera, renderer, controls;
 let stars =[];
 let planets =[];
-let colors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d];
+let planetColors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d];
 let starColor = 0xdfd7eb;
 
-function init() {
+function init(stars, planets) {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x59615b);
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -21,16 +21,12 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild( renderer.domElement );  
 
-  camera.position.set(0.0, 0.0, 150);
+  camera.position.set(0.0, -30.0, 120);
   controls.update();
-
-  // HemiLight
-  let hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f0e0d, 2);
-  // scene.add(hemiLight);
   
   // Create stars and planets
-  createStars(30);
-  createPlanets(300);
+  createStars(stars);
+  createPlanets(planets);
   //Create mirrors 
   mirror(200, "back");
   mirror(200, "front");
@@ -70,7 +66,7 @@ function init() {
 function createPlanets(n) {
   for (let i=0; i<n; i++) {
     let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 2);
-    let theColor = colors[Math.floor(Math.random()*colors.length)];
+    let theColor = planetColors[Math.floor(Math.random()*planetColors.length)];
     let material = new THREE.MeshStandardMaterial({color: theColor});
     let octahedron = new THREE.Mesh(geometry, material);
     scene.add(octahedron);
@@ -170,24 +166,29 @@ function onWindowResize() {
 }
 
 function initGUI() {
-  let settings = {
-    starColor: {
-      Color: "#dfd7eb"      
-    }
+  let colors = {
+      "Room Color": "#dfd7eb"
+  };
+  let zoom = {
+    "View Distance": 120
   };
   let gui = new dat.GUI();
-  let starFolder = gui.addFolder('Room Color');
-  let starController = starFolder.addColor(settings.starColor, 'Color');
+  let colorController = gui.addColor(colors, 'Room Color');
+  let zoomController = gui.add(zoom, 'View Distance', 0, 400);
   
-  starController.onChange((value) => {
+  colorController.onChange((value) => {
     value = value.replace('#', '0x');
     stars.map(star => {
       star.color.setHex(value);
       star.colorsNeedUpdate = true;
     })
   });
+
+  zoomController.onChange((value) => {
+    camera.position.z = value;
+  });
 }
-init();
+init(30, 300);
 animate();
 initGUI();
 window.addEventListener('resize', onWindowResize);
