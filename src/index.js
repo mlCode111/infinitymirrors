@@ -1,11 +1,13 @@
 import * as THREE from 'three';
+import * as dat from 'dat.gui';
 import OrbitControls from 'three-orbitcontrols';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 
 let scene, camera, renderer, controls;
 let stars =[];
 let planets =[];
-let colors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d]
+let colors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d];
+let starColors = [0x5e2eab, 0x14353b, 0x573d3d];
 
 function init() {
   scene = new THREE.Scene();
@@ -19,7 +21,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild( renderer.domElement );  
 
-  camera.position.set(0.0, 0.0, 180);
+  camera.position.set(0.0, 0.0, 150);
   controls.update();
 
   // HemiLight
@@ -49,7 +51,6 @@ function init() {
  function createStars(n) {
   for (let i=0; i<n; i++) {
     let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*0.5);
-    let starColors = [0x5e2eab, 0x14353b, 0x573d3d]
     let theColor = starColors[Math.floor(Math.random()*colors.length)];
     let bulbMaterial = new THREE.MeshStandardMaterial({
       color: theColor
@@ -70,7 +71,6 @@ function init() {
 function createPlanets(n) {
   for (let i=0; i<n; i++) {
     let geometry = new THREE.OctahedronBufferGeometry(Math.random()* 2);
-    // let geometry = new THREE.SphereBufferGeometry(Math.random()* 2, Math.floor(Math.random()* 2) + 3, Math.floor(Math.random()* 3) + 2, 0, 6.3, 0, 3.1);
     let theColor = colors[Math.floor(Math.random()*colors.length)];
     let material = new THREE.MeshStandardMaterial({color: theColor});
     let octahedron = new THREE.Mesh(geometry, material);
@@ -114,6 +114,7 @@ function mirror(width, side) {
   scene.add(mirror);
 }
 
+// Walls behind mirrors
 function wall(width, side) {
   let geometry = new THREE.PlaneGeometry(width, width);
   let wall = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x292b29}));
@@ -162,12 +163,44 @@ function animate() {
   });
 }
 
-init();
-animate();
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+function initGUI() {
+  let settings = {
+    starColor: {
+      Star1: "#5e2eab",
+      Star2: "#14353b",
+      Star3: "#573d3d"
+    }
+  };
+  let gui = new dat.GUI();
+  let starFolder = gui.addFolder('Star Colors');
+  let star1Controller = starFolder.addColor(settings.starColor, 'Star1');
+  let star2Controller = starFolder.addColor(settings.starColor, 'Star2');
+  let star3Controller = starFolder.addColor(settings.starColor, 'Star3');
+  
+  star1Controller.onChange((value) => {
+    value = value.replace('#', '0x');
+    starColors[0] = parseInt(value);
+    createStars(stars.length);
+  });
+  star2Controller.onChange((value) => {
+    value = value.replace('#', '0x');
+    starColors[1] = parseInt(value);
+    createStars(stars.length);
+  });
+  star3Controller.onChange((value) => {
+    value = value.replace('#', '0x');
+    starColors[2] = parseInt(value);
+    createStars(stars.length);
+  });
+}
+init();
+animate();
+initGUI();
 window.addEventListener('resize', onWindowResize);
