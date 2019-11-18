@@ -7,7 +7,7 @@ let scene, camera, renderer, controls;
 let stars =[];
 let planets =[];
 let colors = [0x89b8e8, 0x3250a8, 0xccb116, 0xd9910d];
-let starColors = [0x5e2eab, 0x14353b, 0x573d3d];
+let starColor = 0xdfd7eb;
 
 function init() {
   scene = new THREE.Scene();
@@ -51,11 +51,10 @@ function init() {
  function createStars(n) {
   for (let i=0; i<n; i++) {
     let bulbGeometry = new THREE.IcosahedronBufferGeometry(Math.random()*0.5);
-    let theColor = starColors[Math.floor(Math.random()*colors.length)];
     let bulbMaterial = new THREE.MeshStandardMaterial({
-      color: theColor
+      color: starColor
     });
-    let bulbLight = new THREE.PointLight(theColor, 1, 200, 2);
+    let bulbLight = new THREE.PointLight(starColor, 1, 200, 2);
     bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMaterial));
     bulbLight.castShadow = true;
     scene.add(bulbLight);
@@ -173,31 +172,19 @@ function onWindowResize() {
 function initGUI() {
   let settings = {
     starColor: {
-      Star1: "#5e2eab",
-      Star2: "#14353b",
-      Star3: "#573d3d"
+      Color: "#dfd7eb"      
     }
   };
   let gui = new dat.GUI();
-  let starFolder = gui.addFolder('Star Colors');
-  let star1Controller = starFolder.addColor(settings.starColor, 'Star1');
-  let star2Controller = starFolder.addColor(settings.starColor, 'Star2');
-  let star3Controller = starFolder.addColor(settings.starColor, 'Star3');
+  let starFolder = gui.addFolder('Room Color');
+  let starController = starFolder.addColor(settings.starColor, 'Color');
   
-  star1Controller.onChange((value) => {
+  starController.onChange((value) => {
     value = value.replace('#', '0x');
-    starColors[0] = parseInt(value);
-    createStars(stars.length);
-  });
-  star2Controller.onChange((value) => {
-    value = value.replace('#', '0x');
-    starColors[1] = parseInt(value);
-    createStars(stars.length);
-  });
-  star3Controller.onChange((value) => {
-    value = value.replace('#', '0x');
-    starColors[2] = parseInt(value);
-    createStars(stars.length);
+    stars.map(star => {
+      star.color.setHex(value);
+      star.colorsNeedUpdate = true;
+    })
   });
 }
 init();
