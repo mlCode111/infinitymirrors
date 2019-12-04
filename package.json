@@ -5,8 +5,9 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --open",
-    "build": "webpack"
+    "start": "node server.js",
+    "build": "webpack --config webpack.config.js",
+    "heroku-postbuild": "webpack -p"
   },
   "keywords": [],
   "author": "ml <mdigitalcomm@gmail.com>",
