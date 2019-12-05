@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="shortcut icon" href="">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
 			body {
         margin: 0;
@@ -13,10 +14,49 @@
 			a {
 				color: #08f;
 			}
+      
+      #about-button {
+        position: absolute;
+        top: 1vh;
+        left: 1vw;
+        z-index: 1;
+      }
+      .modal-content {
+        background-color: rgba(0, 0, 0, 0.4);
+        color: white;
+      }
+      .close {
+        color: white;
+      }
 		</style>
   </head>
   <body>
-      <div id="container"></div>
+      <div id="container">
+        <button type="button" id="about-button"class="btn btn-outline-light" data-toggle="modal" data-target="#about">
+          About
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labeledby="About this project" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">About this project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                This project is inspired by artist Yayoi Kusama's <a href="https://hirshhorn.si.edu/kusama/infinity-rooms/">Infinity Mirror Room Exhibition</a>. 
+                <br/>
+                Use mouse wheel to zoom in and out, left click and drag to rotate around.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <script type="module" src="main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script> 
   </body>
 </html>

@@ -169,12 +169,9 @@ function initGUI() {
   let colors = {
       "Room Color": "#dfd7eb"
   };
-  let zoom = {
-    "View Distance": 120
-  };
+  
   let gui = new dat.GUI();
   let colorController = gui.addColor(colors, 'Room Color');
-  let zoomController = gui.add(zoom, 'View Distance', 0, 400);
   
   colorController.onChange((value) => {
     value = value.replace('#', '0x');
@@ -182,10 +179,6 @@ function initGUI() {
       star.color.setHex(value);
       star.colorsNeedUpdate = true;
     })
-  });
-
-  zoomController.onChange((value) => {
-    camera.position.z = value;
   });
 }
 init(30, 300);
